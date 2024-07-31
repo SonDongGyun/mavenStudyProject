@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.example.service.impl.ExampleMapper">
+
+    <resultMap id="exampleResult" type="example">
+        <id property="exampleNumber" column="example_number"/>
+        <result property="exampleId" column="example_id"/>
+        <result property="exampleName" column="example_name"/>
+        <result property="exampleTitle" column="example_title"/>
+        <result property="exampleInfo" column="example_info"/>
+        <result property="exampleDate" column="example_date" jdbcType="DATE" javaType="java.sql.Date"/>
+    </resultMap>
+
+    <select id="selectExample" resultMap="exampleResult">
+        SELECT example_number, example_id, example_name, example_title, example_info, example_date FROM example_board WHERE 1 = 1
+        <if test="exampleNumber!=null and !exampleNumber.equals('')">
+            AND example_number = #{exampleNumber}
+        </if>
+    </select>
+
+    <select id="selectCountExample" resultType="int">
+        SELECT COUNT(example_number) AS countNumber FROM example_board WHERE 1 = 1
+        <if test="exampleId!=null and !exampleId.equals('')">
+            AND example_id = #{exampleId}
+        </if>
+    </select>
+
+    <select id="selectListExample" parameterType="int" resultMap="exampleResult">
+        SELECT example_number, example_id, example_name, example_title, example_info, example_date
+        FROM example_board WHERE 1 = 1
+        ORDER BY example_number DESC
+            LIMIT ${startRow}, ${limitRow}
+    </select>
+
+    <insert id="insertExample" useGeneratedKeys="true" keyProperty="exampleNumber" parameterType="example">
+        INSERT into example_board(example_id, example_name, example_title, example_info)
+            VALUE(#{exampleId}, #{exampleName}, #{exampleTitle}, #{exampleInfo})
+    </insert>
+
+    <update id="updateExample">
+        UPDATE example_board SET
+            example_name = #{exampleName}
+                               , example_title = #{exampleTitle}
+                               , example_info = #{exampleInfo}
+                               , example_date = #{exampleDate}
+        WHERE 1 = 1
+          AND example_number = #{exampleNumber}
+          AND example_id = #{exampleId}
+    </update>
+
+    <delete id="deleteExample">
+        DELETE FROM example_board WHERE 1 = 1
+                                    AND example_number = #{exampleNumber};
+    </delete>
+</mapper>
